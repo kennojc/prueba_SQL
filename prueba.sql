@@ -76,56 +76,75 @@ INSERT INTO facturas (invoice_id , date, subtotal, cliente_id) VALUES (1826, '20
 INSERT INTO facturas (invoice_id , date, subtotal, cliente_id) VALUES (1843, '2020-06-21', 569, 5 );
 INSERT INTO facturas (invoice_id , date, subtotal, cliente_id) VALUES (1848, '2020-06-23', 50, 5 );
 
-
-
-
-
-
-
+-- Error : No le puse Categorías a los Productos !!! --
+UPDATE productos SET id_categoria='Alimentos' WHERE product_name='almendra';
+UPDATE productos SET id_categoria='Alimentos' WHERE product_name='faisan';
+UPDATE productos SET id_categoria='Trabajólicos' WHERE product_name=' teclado';
+UPDATE productos SET id_categoria='Trabajólicos' WHERE product_name='monitor43';
+UPDATE productos SET id_categoria='Ociosos' WHERE product_name=' disco_vinilo';
+UPDATE productos SET id_categoria='Ociosos' WHERE product_name='compact_disc';
+UPDATE productos SET id_categoria='Ociosos' WHERE product_name='mortalkombat';
+UPDATE productos SET id_categoria='Ociosos' WHERE product_name='mario1';
 
 
 
 -- Productos que se compraron --
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1225, 'music84');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1225, 'food210');
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1228, 'games35');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1228, 'games13');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1228, 'food210');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1534, 'music01');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1534, 'tecno15');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1534, 'tecno53');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1576, 'games35');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1576, 'games13');
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1584, 'food356');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1584, 'games35');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1584, 'games13');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1225, 'music84');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1225, 'food210');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1228, 'games35');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1228, 'games13');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1228, 'food210');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1534, 'music01');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1534, 'tecno15');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1534, 'tecno53');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1576, 'games35');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1576, 'games13');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1584, 'food356');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1584, 'games35');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1584, 'games13');
 INSERT INTO factura_producto (id_invoice, id_product) VALUES (1714, 'music84');
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1814, 'music84');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1814, 'music01');
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1826, 'tecno15');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1826, 'tecno53');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1826, 'food210');
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'games13');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'games35');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'food356');
-INSERT 0 1
-prueba=# INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'music84');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1814, 'music84');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1814, 'music01');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1826, 'tecno15');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1826, 'tecno53');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1826, 'food210');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'games13');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'games35');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'food356');
+INSERT INTO factura_producto (id_invoice, id_product) VALUES (1843, 'music84');
 INSERT INTO factura_producto (id_invoice, id_product) VALUES (1848, 'music01');
+
+-- INFORMACIÓN DESDE LAS TABLAS --
+
+--¿Que cliente realizó la compra más cara?--
+-- fue YANN
+SELECT client_name FROM clientes 
+INNER JOIN facturas ON clientes.client_id=facturas.cliente_id 
+WHERE subtotal = (SELECT MAX(subtotal) FROM facturas);
+
+--¿Que cliente pagó sobre 100 de monto?--
+-- Giovanni y Yann
+
+SELECT client_name FROM clientes INNER JOIN facturas ON clientes.client_id=facturas.cliente_id WHERE subtotal > 100 GROUP BY client_name;
+
+-- ¿Cuantos clientes han comprado el producto 6 : Faisan, porque es el 6 en correlativo solamente --
+-- Respuesta : Son dos.
+
+SELECT count(client_id) FROM clientes INNER JOIN facturas ON clientes.client_id = facturas.cliente_id
+WHERE facturas.invoice_id IN (SELECT id_invoice FROM factura_producto WHERE id_product='food356');
+
+-- Para saber quiénes fueron esos dos....Yann y Giovanni --
+SELECT client_name FROM clientes INNER JOIN facturas ON clientes.client_id = facturas.cliente_id
+WHERE facturas.invoice_id IN (SELECT id_invoice FROM factura_producto WHERE id_product='food356');
+
+
+
+
+
+
+
+
+
 
 
 
